@@ -1,0 +1,11 @@
+class BadMole extends Mole {
+  BadMole() {
+    super(false);  // 항상 나쁜 두더지로 고정
+  }
+
+  int scoreChange() {
+    alive = false;
+    nextTime = millis() + int(random(1000, 3000));
+    return -10;
+  }
+}
