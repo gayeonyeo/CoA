@@ -1,0 +1,45 @@
+Mole goodMole;
+BadMole badMole;
+Hammer hammer;
+ScoreBoard scoreboard;
+
+void setup() {
+  size(800, 600);
+  goodMole = new Mole(true);
+  badMole = new BadMole();
+  hammer = new Hammer();
+  scoreboard = new ScoreBoard(60);  // 제한시간 60초
+}
+
+void draw() {
+  background(60, 160, 60); // 초록 배경 (잔디 느낌)
+
+  // 두더지 상태 갱신
+  goodMole.update();
+  badMole.update();
+
+  // 두더지 그리기
+  goodMole.display();
+  badMole.display();
+
+  // 망치 이동 및 표시
+  hammer.move();
+  hammer.display();
+
+  // 망치와 두더지 충돌
+  if (hammer.checkHit(goodMole)) scoreboard.addScore(goodMole.scoreChange());
+  if (hammer.checkHit(badMole))  scoreboard.addScore(badMole.scoreChange());
+
+  // 점수판
+  scoreboard.update();
+  scoreboard.display();
+}
+
+// 마우스 클릭 시 망치 휘두르기
+void mousePressed() {
+  hammer.swinging = true;
+}
+
+void mouseReleased() {
+  hammer.swinging = false;
+}
