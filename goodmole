@@ -1,0 +1,49 @@
+class Mole {
+  float x, y, size = 80; //위치와 크기, 크기는 80고정 
+  boolean alive = false;  //두더지가 화면에 등장해 있는지 여부 true면 그려짐 
+  int nextTime;
+  int disappearTime;
+  boolean good;
+
+  Mole(boolean good) {
+    this.good = good;
+    nextTime = millis() + int(random(1000, 3000));
+  }
+
+  void update() {
+    if (!alive && millis() > nextTime) {
+      // 등장
+      alive = true;
+      x = random(100, width - 100);
+      y = random(height/2, height - 100);
+      disappearTime = millis() + int(random(800, 1500));
+    } else if (alive && millis() > disappearTime) {
+      // 사라짐
+      alive = false;
+      nextTime = millis() + int(random(1000, 3000));
+    }
+  }
+
+  void display() {
+    if (!alive) return;
+   if (good) {
+     fill(color(100, 200, 255));   // 좋은 두더지 → 하늘색
+   } else {
+     fill(color(255, 100, 100));   // 나쁜 두더지 → 빨간색
+   }
+    ellipse(x, y, size, size);
+    fill(0);
+    ellipse(x - 10, y - 10, 10, 10);
+    ellipse(x + 10, y - 10, 10, 10);
+  }
+
+  int scoreChange() {
+  alive = false;
+  nextTime = millis() + int(random(1000, 3000));
+  if (good) {
+    return 10;
+  } else {
+    return 0;
+  }
+  }
+}
