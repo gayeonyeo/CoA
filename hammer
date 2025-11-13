@@ -1,0 +1,31 @@
+class Hammer {
+  float x, y;
+  boolean swinging = false;
+
+  void move() {
+    x = mouseX;
+    y = mouseY;
+  }
+
+  void display() {
+    pushMatrix();
+    translate(x, y);
+    if (swinging) rotate(radians(30));
+    stroke(80);
+    strokeWeight(6);
+    line(0, -40, 0, 20); // 손잡이
+    noStroke();
+    fill(180);
+    rect(-20, -60, 40, 20, 5); // 망치 머리
+    popMatrix();
+  }
+
+  boolean checkHit(Mole m) {
+    if (!m.alive) return false;
+    float d = dist(x, y, m.x, m.y);
+    if (swinging && d < m.size / 2) {
+      return true;
+    }
+    return false;
+  }
+}
