@@ -1,0 +1,36 @@
+class ScoreBoard {
+  int score = 0;
+  int timeLimit;
+  int startTime;
+  boolean ended = false;
+
+  ScoreBoard(int limit) {
+    timeLimit = limit;
+    startTime = millis();
+  }
+
+  void addScore(int s) {
+    if (!ended) score += s;
+  }
+
+  void update() {
+    int elapsed = (millis() - startTime) / 1000;
+    if (elapsed >= timeLimit && !ended) {
+      ended = true;
+      noLoop();
+      fill(255, 0, 0);
+      textSize(50);
+      textAlign(CENTER, CENTER);
+      text("Game Over!", width/2, height/2);
+    }
+  }
+
+  void display() {
+    fill(255);
+    textAlign(LEFT);
+    textSize(20);
+    text("Score: " + score, 20, 30);
+    int remain = max(0, timeLimit - (millis() - startTime)/1000);
+    text("Time: " + remain, width - 120, 30);
+  }
+}
