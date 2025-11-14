@@ -1,0 +1,90 @@
+Mole goodMole;
+BadMole badMole;
+Hammer hammer;
+ScoreBoard scoreboard;
+
+// --- 공통 타이머 및 상태 변수 ---
+int nextAppearanceTime;    // 다음 '등장' 시간
+int nextDisappearanceTime; // 다음 '사라질' 시간
+boolean molesAreAlive = false; // 두더지가 '함께' 나와있는지 여부
+
+void setup() {
+  size(800, 600);
+  goodMole = new Mole(true);
+  badMole = new BadMole();
+  hammer = new Hammer();
+  scoreboard = new ScoreBoard(60);  // 제한시간 60초
+
+  nextAppearanceTime = millis() + int(random(1000, 3000));
+}
+
+void draw() {
+  background(60, 160, 60);
+
+  updateMoleState();
+
+  goodMole.display();
+  badMole.display();
+
+  hammer.move();
+  hammer.display();
+
+  if (hammer.checkHit(goodMole)) {
+    scoreboard.addScore(goodMole.scoreChange());
+    hideAllMoles();
+  } 
+  else if (hammer.checkHit(badMole)) { 
+    scoreboard.addScore(badMole.scoreChange());
+    hideAllMoles();
+  }
+
+  // 점수판
+  scoreboard.update();
+  scoreboard.display();
+}
+
+void updateMoleState() {
+  if (!molesAreAlive && millis() > nextAppearanceTime) {
+    showAllMoles();
+  }
+  else if (molesAreAlive && millis() > nextDisappearanceTime) {
+    hideAllMoles();
+  }
+}
+
+void hideAllMoles() {
+  molesAreAlive = false;
+  goodMole.alive = false;
+  badMole.alive = false;
+
+  nextAppearanceTime = millis() + int(random(1000, 3000));
+}
+
+void showAllMoles() {
+  molesAreAlive = true;
+
+  goodMole.alive = true;
+  goodMole.x = random(100, width - 100);
+  goodMole.y = random(height/2, height - 100);
+
+  badMole.alive = true;
+  badMole.x = random(100, width - 100);
+  badMole.y = random(height/2, height - 100);
+
+  while (dist(goodMole.x, goodMole.y, badMole.x, badMole.y) < goodMole.size) {
+      badMole.x = random(100, width - 100);
+      badMole.y = random(height/2, height - 100);
+  }
+
+  nextDisappearanceTime = millis() + int(random(800, 1500));
+}
+
+
+// 마우스 클릭 시 망치 휘두르기
+void mousePressed() {
+  hammer.swinging = true;
+}
+
+void mouseReleased() {
+  hammer.swinging = false;
+}
